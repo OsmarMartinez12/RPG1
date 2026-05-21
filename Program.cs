@@ -1,11 +1,13 @@
+using RPG1.Services;
 using RPG1.Components;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-
+builder.Services.AddSingleton<PersonajeService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

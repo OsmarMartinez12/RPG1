@@ -2,7 +2,7 @@
 {
     public class Arquero : Personaje
     {
-        public string tipoArco { get; set; } = string.Empty;
+        public string TipoArco { get; set; } = string.Empty;
 
         public int Precision { get; set; }
     }

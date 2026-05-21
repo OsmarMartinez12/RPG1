@@ -1,0 +1,199 @@
+﻿@page "/RPG"
+
+@using RPG1.Models
+@using RPG1.Services
+
+@inject PersonajeService servicio
+
+<h1>Registro de Personajes RPG</h1>
+
+<EditForm Model="@personaje" OnValidSubmit="GuardarPersonaje">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Nombre:</label>
+        <InputText @bind-Value="personaje.Nombre" />
+    </div>
+
+    <div>
+        <label>Nivel:</label>
+        <InputNumber @bind-Value="personaje.Nivel" />
+    </div>
+
+    <div>
+        <label>Vida:</label>
+        <InputNumber @bind-Value="personaje.Vida" />
+    </div>
+
+    <div>
+        <label>XP:</label>
+        <InputNumber @bind-Value="personaje.XP" />
+    </div>
+
+    <div>
+        <label>Tipo de personaje:</label>
+
+        <select @onchange="CambiarTipo">
+            <option>Guerrero</option>
+            <option>Mago</option>
+            <option>Arquero</option>
+        </select>
+    </div>
+
+    @if (tipo == "Guerrero")
+    {
+        <div>
+            <label>Tipo de arma:</label>
+            <InputText @bind-Value="guerrero.TipoArma" />
+        </div>
+
+        <div>
+            <label>Defensa Física:</label>
+            <InputNumber @bind-Value="guerrero.DefensaFisica" />
+        </div>
+    }
+
+    @if (tipo == "Mago")
+    {
+        <div>
+            <label>Escuela de Magia:</label>
+            <InputText @bind-Value="mago.EscuelaMagia" />
+        </div>
+
+        <div>
+            <label>Mana:</label>
+            <InputNumber @bind-Value="mago.Mana" />
+        </div>
+    }
+
+    @if (tipo == "Arquero")
+    {
+        <div>
+            <label>Tipo de arco:</label>
+            <InputText @bind-Value="arquero.TipoArco" />
+        </div>
+
+        <div>
+            <label>Precisión:</label>
+            <InputNumber @bind-Value="arquero.Precision" />
+        </div>
+    }
+
+    <br />
+
+    <button type="submit">Guardar</button>
+</EditForm>
+
+<hr />
+
+<h3>Total de personajes: @servicio.personajes.Count</h3>
+
+<ul>
+    @foreach (var p in servicio.personajes)
+    {
+        <li>
+
+            @if (p is Guerrero g)
+            {
+                <span>
+                    [Guerrero]
+                    @g.Nombre -
+                    Nivel @g.Nivel -
+                    Vida @g.Vida -
+                    XP @g.XP -
+                    Arma: @g.TipoArma -
+                    Defensa Física: @g.DefensaFisica
+                </span>
+            }
+
+            else if (p is Mago m)
+            {
+                <span>
+                    [Mago]
+                    @m.Nombre -
+                    Nivel @m.Nivel -
+                    Vida @m.Vida -
+                    XP @m.XP -
+                    Escuela de Magia: @m.EscuelaMagia -
+                    Mana: @m.Mana
+                </span>
+            }
+
+            else if (p is Arquero a)
+            {
+                <span>
+                    [Arquero]
+                    @a.Nombre -
+                    Nivel @a.Nivel -
+                    Vida @a.Vida -
+                    XP @a.XP -
+                    Tipo de Arco: @a.TipoArco -
+                    Precisión: @a.Precision
+                </span>
+            }
+
+        </li>
+    }
+</ul>
+
+@code {
+
+    string tipo = "Guerrero";
+
+    Personaje personaje = new();
+
+    Guerrero guerrero = new();
+
+    Mago mago = new();
+
+    Arquero arquero = new();
+
+    void CambiarTipo(ChangeEventArgs e)
+    {
+        tipo = e.Value.ToString();
+    }
+
+    void GuardarPersonaje()
+    {
+        if (tipo == "Guerrero")
+        {
+            guerrero.Nombre = personaje.Nombre;
+            guerrero.Nivel = personaje.Nivel;
+            guerrero.Vida = personaje.Vida;
+            guerrero.XP = personaje.XP;
+
+            servicio.personajes.Add(guerrero);
+
+            guerrero = new();
+        }
+
+        if (tipo == "Mago")
+        {
+            mago.Nombre = personaje.Nombre;
+            mago.Nivel = personaje.Nivel;
+            mago.Vida = personaje.Vida;
+            mago.XP = personaje.XP;
+
+            servicio.personajes.Add(mago);
+
+            mago = new();
+        }
+
+        if (tipo == "Arquero")
+        {
+            arquero.Nombre = personaje.Nombre;
+            arquero.Nivel = personaje.Nivel;
+            arquero.Vida = personaje.Vida;
+            arquero.XP = personaje.XP;
+
+            servicio.personajes.Add(arquero);
+
+            arquero = new();
+        }
+
+        servicio.Guardar();
+
+        personaje = new();
+    }
+}
